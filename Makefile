@@ -1,0 +1,12 @@
+.DEFAULT_GOAL=default
+
+.PHONY: default
+default: day_01
+
+.PHONY: day_01
+day_01: ensure-poetry
+	@poetry run python ./solutions/day_01/main.py
+
+.PHONY: ensure-poetry
+ensure-poetry:
+	$(call check-command,docker,`poetry` is required. It can be installed using pip install poetry)

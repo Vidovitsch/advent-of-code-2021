@@ -1,0 +1,20 @@
+[[package]]
+name = "advent-helper"
+version = "1.0.0"
+description = ""
+category = "main"
+optional = false
+python-versions = '3.10.0'
+develop = true
+
+[package.source]
+type = "directory"
+url = "advent_helper"
+
+[metadata]
+lock-version = "1.1"
+python-versions = '3.10.0'
+content-hash = "e311e9e69bbae26810f44a1a3ca7f0179bfb92ed23ca8b3687f4e0fc8f56d737"
+
+[metadata.files]
+advent-helper = []

@@ -1,0 +1,8 @@
+[tool.poetry]
+name = 'advent-helper'
+description = ''
+version = '1.0.0'
+authors = []
+
+[tool.poetry.dependencies]
+python = '3.10.0'

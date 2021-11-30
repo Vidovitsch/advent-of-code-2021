@@ -1,0 +1,9 @@
+[tool.poetry]
+name = 'advent-of-code-2021'
+description = ''
+version = '1.0.0'
+authors = []
+
+[tool.poetry.dependencies]
+python = '3.10.0'
+advent_helper = {path = './advent_helper', develop = true}
