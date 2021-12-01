@@ -17,6 +17,9 @@ def get_puzzle() -> puzzle.Puzzle:
 def run():
   get_puzzle().solve_with(solve, run_tests=True)
 
+##############################################################
+# Solution
+##############################################################
 
 def solve(input):
   input = [int(i) for i in input]
