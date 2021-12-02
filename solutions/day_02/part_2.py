@@ -9,7 +9,7 @@ def get_puzzle() -> puzzle.Puzzle:
     [
       {
         'input_path': pathlib.Path(__file__).parent / 'test.txt',
-        'expected_result': ''
+        'expected_result': '900'
       }
     ]
   )
@@ -22,7 +22,20 @@ def run():
 ##############################################################
 
 def solve(input):
-  return None
+  x = 0
+  y = 0
+  aim = 0
+  for course in input:
+    direction, amount = course.split()
+    match direction:
+      case 'forward':
+        x += int(amount)
+        y += aim * int(amount)
+      case 'down':
+        aim += int(amount)
+      case 'up':
+        aim -= int(amount)
+  return x * y
 
 if __name__ == '__main__':
   run()
