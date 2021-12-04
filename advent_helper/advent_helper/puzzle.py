@@ -61,8 +61,6 @@ class Puzzle:
     return True
 
   def _read_input(self, path: pathlib.Path) -> List[str]:
-    lines = []
     with open(path) as file:
-      while (line := file.readline().rstrip()):
-        lines.append(line)
-    return lines
+      lines = (line.rstrip() for line in file)
+      return list(line for line in lines if line)
