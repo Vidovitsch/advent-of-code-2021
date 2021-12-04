@@ -11,6 +11,10 @@ def get_puzzle() -> puzzle.Puzzle:
       {
         'input_path': pathlib.Path(__file__).parent / 'test.txt',
         'expected_result': '1924'
+      },
+      {
+        'input_path': pathlib.Path(__file__).parent / 'input.txt',
+        'expected_result': '2730'
       }
     ]
   )
@@ -26,18 +30,13 @@ def solve(input):
   bingo_numbers = create_bingo_numbers(input)
   bingo_cards = create_bingo_cards(input)
   
-  winning_cards = []
+  winning_results = []
   for number in bingo_numbers:
     for card in bingo_cards:
-      if card.mark_number(number):
-        winning_cards.append(card)
+      if result := card.mark_number(number):
+        winning_results.append(result)
 
-  last_winning_card = winning_cards[-1]
-
-  return calculate_solution(last_winning_card, last_winning_card.first_winning_number)
-
-def calculate_solution(card, number):
-  return sum([int(num) for num in list(card.first_winning_unmarked_grid.keys())]) * int(number)
+  return winning_results[-1]
 
 def create_bingo_numbers(input):
   return input[0].split(',')
@@ -49,8 +48,7 @@ def create_bingo_cards(input):
 
 class BingoCard:
   def __init__(self, grid):
-    self.first_winning_number = None
-    self.first_winning_unmarked_grid = None
+    self.has_already_won = False
     self.unmarked_grid = self._prepare_grid(grid)
     self.marked_grid = {}
 
@@ -59,12 +57,9 @@ class BingoCard:
       self.marked_grid[number] = self.unmarked_grid[number]
       del self.unmarked_grid[number]
 
-    if len(self.marked_grid) >= 5 and self.hasBingo():
-      if self.first_winning_number is not None:
-        return False
-      self.first_winning_number = number
-      self.first_winning_unmarked_grid = dict(self.unmarked_grid)
-      return True
+    if len(self.marked_grid) >= 5 and self.hasBingo() and not self.has_already_won:
+      self.has_already_won = True
+      return sum([int(num) for num in self.unmarked_grid.keys()]) * int(number)
 
     return False
 
