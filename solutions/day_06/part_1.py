@@ -31,10 +31,8 @@ def solve(input):
   internal_timers = get_internal_timers(input)
 
   for i in range(days):
-    new_fish_to_add = internal_timers[0]
     internal_timers.rotate(-1)
     internal_timers[6] += internal_timers[8]
-    internal_timers[8] = new_fish_to_add
 
   return sum(internal_timers)
 
