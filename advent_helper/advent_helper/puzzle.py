@@ -29,7 +29,7 @@ class Puzzle:
     print(f'Solving puzzle: {self.name}\n')
     start = timer()
     solution = str(solver(self._read_input(self.input_path)))
-    print(f'Solution: {solution} ({round(timer() - start, 3)}s)')
+    print(f'Solution: {solution} ({round(timer() - start, 10)}s)')
 
     print('--------------------------------------------------------')
 

@@ -11,6 +11,10 @@ def get_puzzle() -> puzzle.Puzzle:
       {
         'input_path': pathlib.Path(__file__).parent / 'test.txt',
         'expected_result': '26984457539'
+      },
+      {
+        'input_path': pathlib.Path(__file__).parent / 'input.txt',
+        'expected_result': '1708791884591'
       }
     ]
   )
