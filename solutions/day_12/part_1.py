@@ -9,8 +9,16 @@ def get_puzzle() -> puzzle.Puzzle:
     pathlib.Path(__file__).parent / 'input.txt',
     [
       {
-        'input_path': pathlib.Path(__file__).parent / 'test.txt',
-        'expected_result': ''
+        'input_path': pathlib.Path(__file__).parent / 'test1.txt',
+        'expected_result': '10'
+      },
+      {
+        'input_path': pathlib.Path(__file__).parent / 'test2.txt',
+        'expected_result': '19'
+      },
+      {
+        'input_path': pathlib.Path(__file__).parent / 'test3.txt',
+        'expected_result': '226'
       }
     ]
   )
