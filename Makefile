@@ -51,6 +51,10 @@ day_11: ensure-poetry
 day_12: ensure-poetry
 	@poetry run python ./solutions/day_12/main.py
 
+.PHONY: day_13
+day_13: ensure-poetry
+	@poetry run python ./solutions/day_13/main.py
+
 .PHONY: ensure-poetry
 ensure-poetry:
 	$(call check-command,docker,`poetry` is required. It can be installed using pip install poetry)
