@@ -16,7 +16,7 @@ def get_puzzle() -> puzzle.Puzzle:
   )
 
 def run():
-  get_puzzle().run_tests_with(solve, process_input)
+  get_puzzle().solve_with(solve, process_input)
 
 ##############################################################
 # Solution
@@ -29,14 +29,44 @@ def process_input(line):
   return line
 
 def solve(input):
+  steps = 40
   template, rules = input[0], { pair: insertion for pair, insertion in input[1:] }
-  
-  for _ in range(20):
+  rule_step_counter = create_rule_step_counter(rules, int(steps / 2))
+
+  for _ in range(int(steps / 2)):
     template = step(template, rules)
+  
+  counter = Counter({})
+  for i in range(len(template) - 1):
+    pair = template[i:i + 2]
+    counter += Counter(rule_step_counter[pair])
+  
+  counter[template[-1]] += 1
 
-  counts = Counter(template).values()
+  return max(counter.values()) - min(counter.values())
 
-  return max(counts) - min(counts)
+def create_rule_step_counter(rules, steps):
+  def next_step(pair, counter, step=1):
+    char = rules[pair]
+    counter[char] += 1
+
+    if step == steps:
+      return
+
+    next_step(pair[0] + char, counter, step + 1)
+    next_step(char + pair[1], counter, step + 1)
+
+  rule_step_counter = {}
+
+  for pair in rules.keys():
+    if pair not in rule_step_counter:
+      rule_step_counter[pair] = 0
+    counter = { char: 0 for char in rules.values() }
+    next_step(pair, counter)
+    counter[pair[0]] += 1
+    rule_step_counter[pair] = counter
+
+  return rule_step_counter
 
 def step(template, rules):
   new_template = template[0]
