@@ -22,11 +22,16 @@ def run():
 # Solution
 ##############################################################
 
-def process_input(line):
-  if '->' in line:
-    return line.split(' -> ')
+def process_input(lines):
+  processed_input = []
 
-  return line
+  for line in lines:
+    if '->' in line:
+      processed_input.append(line.split(' -> '))
+    else:
+      processed_input.append(line)
+  
+  return processed_input
 
 def solve(input):
   steps = 40
