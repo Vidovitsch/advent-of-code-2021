@@ -59,9 +59,13 @@ day_13: ensure-poetry
 day_14: ensure-poetry
 	@poetry run python ./solutions/day_14/main.py
 
-.PHONY: day_15
-day_15: ensure-poetry
-	@poetry run python ./solutions/day_15/main.py
+.PHONY: 15_1
+15_1: ensure-poetry
+	@poetry run python ./solutions/day_15/part_1.py
+
+.PHONY: 15_2
+15_2: ensure-poetry
+	@poetry run python ./solutions/day_15/part_2.py
 
 .PHONY: ensure-poetry
 ensure-poetry:
