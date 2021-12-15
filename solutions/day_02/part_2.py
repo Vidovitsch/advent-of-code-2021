@@ -1,31 +1,9 @@
 import pathlib
+from typing import Any, List
 
-from advent_helper import puzzle
+from advent_helper.puzzle import Puzzle, PuzzleInput
 
-def get_puzzle() -> puzzle.Puzzle:
-  return puzzle.Puzzle(
-    'Day 2- Part 2',
-    pathlib.Path(__file__).parent / 'input.txt',
-    [
-      {
-        'input_path': pathlib.Path(__file__).parent / 'test.txt',
-        'expected_result': '900'
-      },
-      {
-        'input_path': pathlib.Path(__file__).parent / 'input.txt',
-        'expected_result': '1604592846'
-      }
-    ]
-  )
-
-def run():
-  get_puzzle().solve_with(solve, run_tests=True)
-
-##############################################################
-# Solution
-##############################################################
-
-def solve(input):
+def solve(input: PuzzleInput) -> Any:
   x = 0
   y = 0
   aim = 0
@@ -42,4 +20,7 @@ def solve(input):
   return x * y
 
 if __name__ == '__main__':
-  run()
+  (Puzzle('Day 2 - Part 2', pathlib.Path(__file__).parent / 'input.txt')
+    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 900 })
+    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'input.txt', 'expected_result': 1604592846 })
+    .solve(solve))
