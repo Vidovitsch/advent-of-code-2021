@@ -1,11 +1,15 @@
 .DEFAULT_GOAL=default
 
 .PHONY: default
-default: day_01
+default: 1_1
 
-.PHONY: day_01
-day_01: ensure-poetry
-	@poetry run python ./solutions/day_01/main.py
+.PHONY: 1_1
+1_1: ensure-poetry
+	@poetry run python ./solutions/day_01/part_1.py
+
+.PHONY: 1_2
+1_2: ensure-poetry
+	@poetry run python ./solutions/day_01/part_2.py
 
 .PHONY: day_02
 day_02: ensure-poetry

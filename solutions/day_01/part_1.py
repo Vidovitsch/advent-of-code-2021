@@ -1,32 +1,9 @@
 import pathlib
+from typing import Any, List
 
-from advent_helper import puzzle
+from advent_helper.puzzle import Puzzle, PuzzleInput
 
-def get_puzzle() -> puzzle.Puzzle:
-  return puzzle.Puzzle(
-    'Day 1 - Part 1',
-    pathlib.Path(__file__).parent / 'input.txt',
-    [
-      {
-        'input_path': pathlib.Path(__file__).parent / 'test.txt',
-        'expected_result': '7'
-      },
-      {
-        'input_path': pathlib.Path(__file__).parent / 'input.txt',
-        'expected_result': '1832'
-      }
-    ]
-  )
-
-def run():
-  get_puzzle().solve_with(solve, run_tests=True)
-
-##############################################################
-# Solution
-##############################################################
-
-def solve(input):
-  input = [int(i) for i in input]
+def solve(input: PuzzleInput) -> Any:
   previous_measurement = None
   count = 0
   for measurement in input:
@@ -36,5 +13,12 @@ def solve(input):
 
   return count
 
+def process_input(input: List[str]) -> PuzzleInput:
+  return [int(line) for line in input]
+
 if __name__ == '__main__':
-  run()
+  (Puzzle('Day 1 - Part 1', pathlib.Path(__file__).parent / 'input.txt')
+    .set_input_processor(process_input)
+    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 7 })
+    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'input.txt', 'expected_result': 1832 })
+    .solve(solve))
