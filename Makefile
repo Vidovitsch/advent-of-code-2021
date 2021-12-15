@@ -19,9 +19,13 @@ default: 1_1
 2_2: ensure-poetry
 	@poetry run python ./solutions/day_02/part_2.py
 
-.PHONY: day_03
-day_03: ensure-poetry
-	@poetry run python ./solutions/day_03/main.py
+.PHONY: 3_1
+3_1: ensure-poetry
+	@poetry run python ./solutions/day_03/part_1.py
+
+.PHONY: 3_2
+3_2: ensure-poetry
+	@poetry run python ./solutions/day_03/part_2.py
 
 .PHONY: day_04
 day_04: ensure-poetry

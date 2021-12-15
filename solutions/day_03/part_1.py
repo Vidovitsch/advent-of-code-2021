@@ -1,32 +1,10 @@
-import pathlib
 import collections
+import pathlib
+from typing import Any, List
 
-from advent_helper import puzzle
+from advent_helper.puzzle import Puzzle, PuzzleInput
 
-def get_puzzle() -> puzzle.Puzzle:
-  return puzzle.Puzzle(
-    'Day 3- Part 1',
-    pathlib.Path(__file__).parent / 'input.txt',
-    [
-      {
-        'input_path': pathlib.Path(__file__).parent / 'test.txt',
-        'expected_result': '198'
-      },
-      {
-        'input_path': pathlib.Path(__file__).parent / 'input.txt',
-        'expected_result': '1307354'
-      }
-    ]
-  )
-
-def run():
-  get_puzzle().solve_with(solve, run_tests=True)
-
-##############################################################
-# Solution
-##############################################################
-
-def solve(input):
+def solve(input: PuzzleInput) -> Any:
   gamma_rate = ''
   epsilon_rate = ''
 
@@ -42,4 +20,8 @@ def solve(input):
   return int(gamma_rate, 2) * int(epsilon_rate, 2)
 
 if __name__ == '__main__':
-  run()
+  (Puzzle('Day 3 - Part 1', pathlib.Path(__file__).parent / 'input.txt')
+    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 198 })
+    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'input.txt', 'expected_result': 1307354 })
+    .solve(solve))
+

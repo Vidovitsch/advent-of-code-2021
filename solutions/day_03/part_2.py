@@ -1,32 +1,10 @@
-import pathlib
 import collections
+import pathlib
+from typing import Any, List
 
-from advent_helper import puzzle
+from advent_helper.puzzle import Puzzle, PuzzleInput
 
-def get_puzzle() -> puzzle.Puzzle:
-  return puzzle.Puzzle(
-    'Day 3- Part 2',
-    pathlib.Path(__file__).parent / 'input.txt',
-    [
-      {
-        'input_path': pathlib.Path(__file__).parent / 'test.txt',
-        'expected_result': '230'
-      },
-      {
-        'input_path': pathlib.Path(__file__).parent / 'input.txt',
-        'expected_result': '482500'
-      }
-    ]
-  )
-
-def run():
-  get_puzzle().solve_with(solve, run_tests=True)
-
-##############################################################
-# Solution
-##############################################################
-
-def solve(input):
+def solve(input: PuzzleInput) -> Any:
   o_gen_rating = ''
   co2_scrub_rating = ''
 
@@ -45,8 +23,6 @@ def solve(input):
   co2_scrub_rating = selection[0]
 
   return int(o_gen_rating, 2) * int(co2_scrub_rating, 2)
-
-
 
 def select_for_most_common_first_bit(numbers, bit_index=0, tie_breaker='1'):
   number = ''.join(number[bit_index] for number in numbers)
@@ -68,4 +44,7 @@ def select_for_most_common_first_bit(numbers, bit_index=0, tie_breaker='1'):
   return selection
 
 if __name__ == '__main__':
-  run()
+  (Puzzle('Day 3 - Part 1', pathlib.Path(__file__).parent / 'input.txt')
+    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 230 })
+    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'input.txt', 'expected_result': 482500 })
+    .solve(solve))
