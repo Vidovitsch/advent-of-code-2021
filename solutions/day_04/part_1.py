@@ -1,35 +1,12 @@
 import pathlib
-import collections
+from typing import Any, List
 
-from advent_helper import puzzle
+from advent_helper.puzzle import Puzzle, PuzzleInput
 
-def get_puzzle() -> puzzle.Puzzle:
-  return puzzle.Puzzle(
-    'Day 4 - Part 1',
-    pathlib.Path(__file__).parent / 'input.txt',
-    [
-      {
-        'input_path': pathlib.Path(__file__).parent / 'test.txt',
-        'expected_result': '4512'
-      },
-      {
-        'input_path': pathlib.Path(__file__).parent / 'input.txt',
-        'expected_result': '25410'
-      }
-    ]
-  )
-
-def run():
-  get_puzzle().solve_with(solve)
-
-##############################################################
-# Solution
-##############################################################
-
-def solve(input):
+def solve(input: PuzzleInput) -> Any:
   bingo_numbers = create_bingo_numbers(input)
   bingo_cards = create_bingo_cards(input)
-  
+
   for number in bingo_numbers:
     for card in bingo_cards:
       if card.mark_number(number):
@@ -74,15 +51,18 @@ class BingoCard:
         return True
 
     return False
-  
+
   def _prepare_grid(self, grid):
     prepared_grid = dict()
 
     for y, row in enumerate(grid):
       for x, number in enumerate(row):
         prepared_grid[number] = [x, y]
-    
+
     return prepared_grid
 
 if __name__ == '__main__':
-  run()
+  (Puzzle('Day 4 - Part 1', pathlib.Path(__file__).parent / 'input.txt')
+    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 4512 })
+    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'input.txt', 'expected_result': 25410 })
+    .solve(solve))

@@ -48,7 +48,8 @@ class Puzzle:
 
   def _read_input(self, path: pathlib.Path) -> PuzzleInput:
     with open(path) as file:
-      return self.process_input(list(line.rstrip() for line in file if line))
+      lines = (line.rstrip() for line in file)
+      return self.process_input(list(line for line in lines if line))
 
   def _run_all_tests(self, solve: Callable[[PuzzleInput], Any]) -> bool:
     return all([self._run_test(test, solve) for test in self.tests])

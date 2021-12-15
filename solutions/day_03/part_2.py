@@ -44,7 +44,7 @@ def select_for_most_common_first_bit(numbers, bit_index=0, tie_breaker='1'):
   return selection
 
 if __name__ == '__main__':
-  (Puzzle('Day 3 - Part 1', pathlib.Path(__file__).parent / 'input.txt')
+  (Puzzle('Day 3 - Part 2', pathlib.Path(__file__).parent / 'input.txt')
     .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 230 })
     .add_test({ 'input_path': pathlib.Path(__file__).parent / 'input.txt', 'expected_result': 482500 })
     .solve(solve))
