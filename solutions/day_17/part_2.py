@@ -1,9 +1,19 @@
 import pathlib
-from typing import Any, List, Tuple
+from typing import List, Tuple
 
-from advent_helper.puzzle import Puzzle, PuzzleInput
+from advent_helper.decorators import process_puzzle_input
+from advent_helper.puzzle import Puzzle
 
-def solve(target_area: PuzzleInput) -> Any:
+def process_input(input: List[str]) -> Tuple[int, int, int, int]:
+  target_area = []
+
+  for dimension in input[0][13:].split(', '):
+    target_area += sorted(map(int, dimension[2:].split('..')))
+  
+  return target_area
+
+@process_puzzle_input(process_input)
+def solve(target_area: Tuple[int, int, int, int]) -> int:
   x_values = calc_possible_x_velocities(target_area)
   y_values = calc_possible_y_velocities(target_area)
 
@@ -82,18 +92,8 @@ def will_never_hit(velocity: Tuple[int, int], location: Tuple[int, int], target_
   else:
     return False
 
-
-def process_input(input: List[str]) -> PuzzleInput:
-  target_area = []
-
-  for dimension in input[0][13:].split(', '):
-    target_area += sorted(map(int, dimension[2:].split('..')))
-  
-  return target_area
-
 if __name__ == '__main__':
   (Puzzle('Day 17 - Part 2', pathlib.Path(__file__).parent / 'input.txt')
-    .set_input_processor(process_input)
     .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 112 })
     .add_test({ 'input_path': pathlib.Path(__file__).parent / 'input.txt', 'expected_result': 4716 })
     .solve(solve))

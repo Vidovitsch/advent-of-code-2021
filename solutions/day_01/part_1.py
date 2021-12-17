@@ -1,5 +1,5 @@
 import pathlib
-from typing import Any, List
+from typing import List
 
 from advent_helper.decorators import process_puzzle_input
 from advent_helper.puzzle import Puzzle

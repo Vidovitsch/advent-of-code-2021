@@ -1,16 +1,17 @@
 import pathlib
-from typing import Any, List
+from typing import List
 
-from advent_helper.puzzle import Puzzle, PuzzleInput
+from advent_helper.decorators import process_puzzle_input
+from advent_helper.puzzle import Puzzle
 
-def solve(input: PuzzleInput) -> Any:
-  return 0
-
-def process_input(input: List[str]) -> PuzzleInput:
+def process_input(input: List[str]) -> List[str]:
   return input
+
+@process_puzzle_input(process_input)
+def solve(input: List[str]) -> int:
+  return 0
 
 if __name__ == '__main__':
   (Puzzle('Day 18 - Part 2', pathlib.Path(__file__).parent / 'input.txt')
-    .set_input_processor(process_input)
     .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 0 })
     .solve(solve))
