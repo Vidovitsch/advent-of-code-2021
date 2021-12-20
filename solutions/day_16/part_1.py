@@ -75,11 +75,11 @@ def process_input(input: List[str]) -> PuzzleInput:
   return''.join(hexadecimal_decoder[char] for char in input[0])
 
 if __name__ == '__main__':
-  (Puzzle('Day 16 - Part 1', pathlib.Path(__file__).parent / 'input.txt')
+  (Puzzle('Day 16 - Part 1', CURRENT / 'input.txt')
     .set_input_processor(process_input)
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test1.txt', 'expected_result': 16 })
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test2.txt', 'expected_result': 12 })
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test3.txt', 'expected_result': 23 })
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test4.txt', 'expected_result': 31 })
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'input.txt', 'expected_result': 923 })
+    .add_test({ 'input_path': CURRENT / 'test1.txt', 'expected_result': 16 })
+    .add_test({ 'input_path': CURRENT / 'test2.txt', 'expected_result': 12 })
+    .add_test({ 'input_path': CURRENT / 'test3.txt', 'expected_result': 23 })
+    .add_test({ 'input_path': CURRENT / 'test4.txt', 'expected_result': 31 })
+    .add_test({ 'input_path': CURRENT / 'input.txt', 'expected_result': 923 })
     .solve(solve))

@@ -1,7 +1,11 @@
 import pathlib
 from typing import Any, List
 
-from advent_helper.puzzle import Puzzle, PuzzleInput
+from advent_helper.puzzle import Puzzle
+
+CURRENT = pathlib.Path(__file__).parent
+
+PuzzleInput = List[str]
 
 def solve(input: PuzzleInput) -> Any:
   x = 0
@@ -18,7 +22,7 @@ def solve(input: PuzzleInput) -> Any:
   return x * y
 
 if __name__ == '__main__':
-  (Puzzle('Day 2 - Part 1', pathlib.Path(__file__).parent / 'input.txt')
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 150 })
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'input.txt', 'expected_result': 1660158 })
+  (Puzzle('Day 2: Dive! (part 1)', CURRENT / 'input.txt')
+    .add_test({ 'input_path': CURRENT / 'test.txt', 'expected_result': 150 })
+    .add_test({ 'input_path': CURRENT / 'input.txt', 'expected_result': 1660158 })
     .solve(solve))

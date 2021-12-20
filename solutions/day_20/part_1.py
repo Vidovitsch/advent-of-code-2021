@@ -110,7 +110,7 @@ def solve(input: PuzzleInput) -> int:
   return image.number_of_lit_pixels()
 
 if __name__ == '__main__':
-  (Puzzle('Day 20 - Part 1', pathlib.Path(__file__).parent / 'input.txt')
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 35 })
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'input.txt', 'expected_result': 5479 })
+  (Puzzle('Day 20 - Part 1', CURRENT / 'input.txt')
+    .add_test({ 'input_path': CURRENT / 'test.txt', 'expected_result': 35 })
+    .add_test({ 'input_path': CURRENT / 'input.txt', 'expected_result': 5479 })
     .solve(solve))

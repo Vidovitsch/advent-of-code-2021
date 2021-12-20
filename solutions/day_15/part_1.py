@@ -37,8 +37,8 @@ def process_input(input: List[str]) -> PuzzleInput:
   return processed_input
 
 if __name__ == '__main__':
-  (Puzzle('Day 15 - Part 1', pathlib.Path(__file__).parent / 'input.txt')
+  (Puzzle('Day 15 - Part 1', CURRENT / 'input.txt')
     .set_input_processor(process_input)
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 40 })
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'input.txt', 'expected_result': 415 })
+    .add_test({ 'input_path': CURRENT / 'test.txt', 'expected_result': 40 })
+    .add_test({ 'input_path': CURRENT / 'input.txt', 'expected_result': 415 })
     .solve(solve))

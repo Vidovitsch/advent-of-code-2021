@@ -6,7 +6,7 @@ import numpy as np
 def get_puzzle() -> puzzle.Puzzle:
   return puzzle.Puzzle(
     'Day 13 - Part 2',
-    pathlib.Path(__file__).parent / 'input.txt'
+    CURRENT / 'input.txt'
   )
 
 def run():

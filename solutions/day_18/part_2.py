@@ -116,7 +116,7 @@ def solve(input: List[str]) -> int:
   return max(magnitudes)
 
 if __name__ == '__main__':
-  (Puzzle('Day 18 - Part 2', pathlib.Path(__file__).parent / 'input.txt')
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 3993 })
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 4917 })
+  (Puzzle('Day 18 - Part 2', CURRENT / 'input.txt')
+    .add_test({ 'input_path': CURRENT / 'test.txt', 'expected_result': 3993 })
+    .add_test({ 'input_path': CURRENT / 'test.txt', 'expected_result': 4917 })
     .solve(solve))

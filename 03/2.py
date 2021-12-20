@@ -2,7 +2,11 @@ import collections
 import pathlib
 from typing import Any, List
 
-from advent_helper.puzzle import Puzzle, PuzzleInput
+from advent_helper.puzzle import Puzzle
+
+CURRENT = pathlib.Path(__file__).parent
+
+PuzzleInput = List[str]
 
 def solve(input: PuzzleInput) -> Any:
   o_gen_rating = ''
@@ -44,7 +48,7 @@ def select_for_most_common_first_bit(numbers, bit_index=0, tie_breaker='1'):
   return selection
 
 if __name__ == '__main__':
-  (Puzzle('Day 3 - Part 2', pathlib.Path(__file__).parent / 'input.txt')
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 230 })
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'input.txt', 'expected_result': 482500 })
+  (Puzzle('Day 3: Binary Diagnostic (part 2)', CURRENT / 'input.txt')
+    .add_test({ 'input_path': CURRENT / 'test.txt', 'expected_result': 230 })
+    .add_test({ 'input_path': CURRENT / 'input.txt', 'expected_result': 482500 })
     .solve(solve))

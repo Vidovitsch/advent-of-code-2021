@@ -129,6 +129,6 @@ def solve(scanners: List[Scanner]) -> int:
   return len(set(beacons))
 
 if __name__ == '__main__':
-  (Puzzle('Day 19 - Part 1', pathlib.Path(__file__).parent / 'input.txt')
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 79 })
+  (Puzzle('Day 19 - Part 1', CURRENT / 'input.txt')
+    .add_test({ 'input_path': CURRENT / 'test.txt', 'expected_result': 79 })
     .solve(solve))

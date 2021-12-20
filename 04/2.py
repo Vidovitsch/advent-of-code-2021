@@ -1,7 +1,11 @@
 import pathlib
 from typing import Any, List
 
-from advent_helper.puzzle import Puzzle, PuzzleInput
+from advent_helper.puzzle import Puzzle
+
+CURRENT = pathlib.Path(__file__).parent
+
+PuzzleInput = List[str]
 
 def solve(input: PuzzleInput) -> Any:
   bingo_numbers = create_bingo_numbers(input)
@@ -62,7 +66,7 @@ class BingoCard:
     return prepared_grid
 
 if __name__ == '__main__':
-  (Puzzle('Day 4 - Part 2', pathlib.Path(__file__).parent / 'input.txt')
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 1924 })
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'input.txt', 'expected_result': 2730 })
+  (Puzzle('Day 4: Giant Squid (part 2)', CURRENT / 'input.txt')
+    .add_test({ 'input_path': CURRENT / 'test.txt', 'expected_result': 1924 })
+    .add_test({ 'input_path': CURRENT / 'input.txt', 'expected_result': 2730 })
     .solve(solve))

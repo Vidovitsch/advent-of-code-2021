@@ -6,14 +6,14 @@ from advent_helper import puzzle
 def get_puzzle() -> puzzle.Puzzle:
   return puzzle.Puzzle(
     'Day 8 - Part 1',
-    pathlib.Path(__file__).parent / 'input.txt',
+    CURRENT / 'input.txt',
     [
       {
-        'input_path': pathlib.Path(__file__).parent / 'test.txt',
+        'input_path': CURRENT / 'test.txt',
         'expected_result': '26'
       },
       {
-        'input_path': pathlib.Path(__file__).parent / 'input.txt',
+        'input_path': CURRENT / 'input.txt',
         'expected_result': '504'
       }
     ]

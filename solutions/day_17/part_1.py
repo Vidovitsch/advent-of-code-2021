@@ -93,7 +93,7 @@ def will_never_hit(velocity: Tuple[int, int], location: Tuple[int, int], target_
     return False
 
 if __name__ == '__main__':
-  (Puzzle('Day 17 - Part 1', pathlib.Path(__file__).parent / 'input.txt')
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 45 })
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'input.txt', 'expected_result': 10878 })
+  (Puzzle('Day 17 - Part 1', CURRENT / 'input.txt')
+    .add_test({ 'input_path': CURRENT / 'test.txt', 'expected_result': 45 })
+    .add_test({ 'input_path': CURRENT / 'input.txt', 'expected_result': 10878 })
     .solve(solve))

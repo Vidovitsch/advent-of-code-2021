@@ -2,7 +2,11 @@ import collections
 import pathlib
 from typing import Any, List
 
-from advent_helper.puzzle import Puzzle, PuzzleInput
+from advent_helper.puzzle import Puzzle
+
+CURRENT = pathlib.Path(__file__).parent
+
+PuzzleInput = List[str]
 
 def solve(input: PuzzleInput) -> Any:
   gamma_rate = ''
@@ -20,8 +24,8 @@ def solve(input: PuzzleInput) -> Any:
   return int(gamma_rate, 2) * int(epsilon_rate, 2)
 
 if __name__ == '__main__':
-  (Puzzle('Day 3 - Part 1', pathlib.Path(__file__).parent / 'input.txt')
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 198 })
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'input.txt', 'expected_result': 1307354 })
+  (Puzzle('Day 3: Binary Diagnostic (part 1)', CURRENT / 'input.txt')
+    .add_test({ 'input_path': CURRENT / 'test.txt', 'expected_result': 198 })
+    .add_test({ 'input_path': CURRENT / 'input.txt', 'expected_result': 1307354 })
     .solve(solve))
 

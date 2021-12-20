@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 day="$(echo $1 | sed 's/^0*//')"
-part="$2"
+part="$(echo $2 | sed 's/^0*//')"
 
 if [ "${#day}" == 1 ]; then
   day="0$day"

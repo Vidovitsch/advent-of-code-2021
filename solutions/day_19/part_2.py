@@ -128,6 +128,6 @@ def solve(scanners: List[Scanner]) -> int:
   return max(manhattan(a.absolute_position, b.absolute_position) for a, b in combinations(absolute_scanners, 2))
 
 if __name__ == '__main__':
-  (Puzzle('Day 19 - Part 2', pathlib.Path(__file__).parent / 'input.txt')
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 3621 })
+  (Puzzle('Day 19 - Part 2', CURRENT / 'input.txt')
+    .add_test({ 'input_path': CURRENT / 'test.txt', 'expected_result': 3621 })
     .solve(solve))

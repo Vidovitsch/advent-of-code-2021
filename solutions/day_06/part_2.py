@@ -23,7 +23,7 @@ def get_internal_timers(input):
   return deque(internal_timers)
 
 if __name__ == '__main__':
-  (Puzzle('Day 6 - Part 2', pathlib.Path(__file__).parent / 'input.txt')
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'test.txt', 'expected_result': 26984457539 })
-    .add_test({ 'input_path': pathlib.Path(__file__).parent / 'input.txt', 'expected_result': 1708791884591 })
+  (Puzzle('Day 6 - Part 2', CURRENT / 'input.txt')
+    .add_test({ 'input_path': CURRENT / 'test.txt', 'expected_result': 26984457539 })
+    .add_test({ 'input_path': CURRENT / 'input.txt', 'expected_result': 1708791884591 })
     .solve(solve))
