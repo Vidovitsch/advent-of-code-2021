@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+day="$(echo $1 | sed 's/^0*//')"
+part="$2"
+
+if [ "${#day}" == 1 ]; then
+  day="0$day"
+fi
+
+if [ "$part" == "1" ] || [ "$part" == "2" ]; then
+  poetry run python "$day/$part.py"
+else
+  poetry run python "$day/1.py"
+  poetry run python "$day/2.py"
+fi
