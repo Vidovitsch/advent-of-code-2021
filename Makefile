@@ -5,11 +5,11 @@ default: 1_1
 
 .PHONY: 1_1
 1_1: ensure-poetry
-	@poetry run python ./solutions/day_01/part_1.py
+	@poetry run python ./01/1.py
 
 .PHONY: 1_2
 1_2: ensure-poetry
-	@poetry run python ./solutions/day_01/part_2.py
+	@poetry run python ./01/2.py
 
 .PHONY: 2_1
 2_1: ensure-poetry

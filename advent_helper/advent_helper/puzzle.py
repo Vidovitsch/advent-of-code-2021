@@ -21,7 +21,7 @@ class Puzzle:
     return self
 
   def solve(self, solve: Callable[[Any], Any]) -> Any:
-    print(f'\nSolving puzzle {ORANGE}{self.name}{END}! 🧩')
+    print(f'\n🧩 {ORANGE}{self.name}{END} 🧩')
 
     if self.tests:
       print()
