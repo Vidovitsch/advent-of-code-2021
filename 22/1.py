@@ -42,4 +42,5 @@ if __name__ == '__main__':
   (Puzzle('Day 22: Reactor Reboot - part 1', CURRENT / 'input.txt')
     .add_test({ 'input_path': CURRENT / 'test_1.txt', 'expected_result': 39 })
     .add_test({ 'input_path': CURRENT / 'test_2.txt', 'expected_result': 590784 })
+    .add_test({ 'input_path': CURRENT / 'input.txt', 'expected_result': 644257 })
     .solve(solve))
