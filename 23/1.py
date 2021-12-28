@@ -1,136 +1,195 @@
+import dataclasses
 import heapq
 import pathlib
-from typing import List, Tuple, Union
+import typing 
+
+import numpy as np
 
 from advent_helper.decorators import process_puzzle_input
 from advent_helper.puzzle import Puzzle
 
 CURRENT = pathlib.Path(__file__).parent
 
-class Amphipod:
-  AMPHIPODS = {
-    'A': { 'energy': 1, 'target_room': 2 },
-    'B': { 'energy': 10, 'target_room': 4 },
-    'C': { 'energy': 100, 'target_room': 6 },
-    'D': { 'energy': 1000, 'target_room': 8 }
-  }
+A, B, C, D = 10 ** np.arange(4)
 
-  def __init__(self, type: str, pos: Tuple[int, int]) -> 'Amphipod':
-    self.type = type
-    self.pos = pos
-    self.energy = self.AMPHIPODS[type]['energy']
-    self.target_pos = ((self.AMPHIPODS[type]['target_room'], 1), (self.AMPHIPODS[type]['target_room'], 2))
+ROOM_DOORS = {
+    A: 2,
+    B: 4,
+    C: 6,
+    D: 8,
+}
 
-  def __str__(self) -> str:
-    return self.type
-
-class Burrow:
-  @classmethod
-  def from_diagram(cls, diagram: List[str]) -> 'Burrow':
-    amphipods = { 'A': [], 'B': [], 'C': [], 'D': [] }
-    grid = [['.'], ['.'], ['.', '.', '.'], ['.'], ['.', '.', '.'], ['.'], ['.', '.', '.'], ['.'], ['.', '.', '.'], ['.'], ['.']]
-    target_rooms = (2, 4, 6, 8)
-
-    for room_pos in range(2, 4):
-      for room in target_rooms:
-        type = diagram[room_pos][room + 1]
-        amphipod = Amphipod(type, (room, room_pos - 1))
-        grid[room][room_pos - 1] = amphipod
-        amphipods[type].append(amphipod)
-
-    return cls(grid, amphipods)
-
-  def __init__(self, grid: List[List[Union[str, object]]], amphipods: List['Amphipod'], energy_spent: int=0) -> 'Burrow':
-    self.grid = grid
-    self.amphipods = amphipods
-    self.energy_spent = energy_spent
-
-  def hallway(self) -> List[Union[str, object]]:
-    return [pos[0] for pos in self.grid]
-
-  def room(self, number: int) -> List[Union[str, object]]:
-    if number in (2, 4, 6, 8): return self.grid[number][1:]
-
-  def is_organized(self) -> bool:
-    return self.manhattan() == 0
-
-  def move(self) -> List['Burrow']:
-    return None
-
-  def manhattan(self):
-    total_energy = 0
-
-    for related_amphipods in self.amphipods.values():
-      for i, amphipod in enumerate(related_amphipods):
-        total_energy += self._amphipod_manhattan(amphipod) - i * amphipod.energy
-
-    return total_energy
-
-  def priority(self) -> int:
-    return self.energy_spent + self.manhattan()
-
-  def _amphipod_in_position(self, amphipod: 'Amphipod') -> bool:
-    related_amphipod = self._related_amphipod(amphipod)
-
-    if amphipod.pos in amphipod.target_pos:
-      if amphipod.pos[1] == 2:
-        return True
-      elif related_amphipod.pos in related_amphipod.target_pos and related_amphipod.pos[1] == 2:
-        return True
-    
-    return False
-  
-  def _amphipod_manhattan(self, amphipod: 'Amphipod') -> int:
-    if amphipod.pos == amphipod.target_pos[1]: return 0
-    
-    steps = abs(amphipod.pos[0] - amphipod.target_pos[0][0]) # hallway steps
-    if amphipod.pos[1] > 0:
-      if amphipod.pos[0] == amphipod.target_pos[0][0]:
-        steps += 1 # steps to end of target room (when in target room already)
-      else:
-        steps += amphipod.pos[1] + 2 # steps out of current room + steps to end of target room
-    else:
-      steps += 2 # steps to end of target room
-
-    return steps * amphipod.energy
-
-  def _related_amphipod(self, amphipod: 'Amphipod') -> 'Amphipod':
-    return [related_amphipod for related_amphipod in self.amphipods[amphipod.type] if related_amphipod is not amphipod]
+ROOMS = {
+    A: 0,
+    B: 1,
+    C: 2,
+    D: 3,
+}
 
 
-  def __lt__(self, burrow: 'Burrow') -> bool:
-    return self.priority() < burrow.priority()
+@dataclasses.dataclass(frozen=True)
+class Room:
+    type: int
+    size: int
+    amphipods: tuple[int]
 
-  def __str__(self) -> str:
-    string = '#############'
-    string += f"\n#{''.join(self.hallway())}#"
-    string += f'\n###{self.room(2)[0]}#{self.room(4)[0]}#{self.room(6)[0]}#{self.room(8)[0]}###'
-    string += f'\n###{self.room(2)[1]}#{self.room(4)[1]}#{self.room(6)[1]}#{self.room(8)[1]}###'
+    def is_final(self):
+        return len(self.amphipods) == self.size and all(amphipod == self.type for amphipod in self.amphipods)
 
-    return string + '\n   #######   '
+    def is_enterable(self):
+        return len(self.amphipods) < self.size and all(amphipod == self.type for amphipod in self.amphipods)
 
-def process_input(input: List[str]) -> 'Burrow':
-  return Burrow.from_diagram(input)
+    def __len__(self):
+        return len(self.amphipods)
 
-@process_puzzle_input(process_input)
-def solve(burrow: 'Burrow') -> int:
-  priority_queue = [burrow]
-  print()
-  print(burrow)
-  print(burrow.manhattan())
-  
-  heapq.heappush(priority_queue, Burrow(burrow.grid, burrow.amphipods))
-  heapq.heappush(priority_queue, Burrow(burrow.grid, burrow.amphipods))
-  heapq.heappush(priority_queue, Burrow(burrow.grid, burrow.amphipods, 222))
-  heapq.heappush(priority_queue, Burrow(burrow.grid, burrow.amphipods, 22))
+    def pop(self):
+        if not self.amphipods:
+            raise ValueError('Room is empty')
 
-  while len(priority_queue) > 0:
-    a = heapq.heappop(priority_queue)
-    print(a.priority())
+        return self.amphipods[-1], dataclasses.replace(self, amphipods=self.amphipods[:-1])
 
-  return 0
+    def append(self, amphipod):
+        return dataclasses.replace(self, amphipods=self.amphipods + (amphipod,))
+
+    def gap(self):
+        return self.size - len(self.amphipods)
+
+
+@dataclasses.dataclass(frozen=True)
+class Hallway:
+    spaces: tuple[typing.Optional[int]] = (None,) * 11
+    DOORS: typing.ClassVar = set(ROOM_DOORS.values())
+
+    def __iter__(self):
+        return iter(self.spaces)
+
+    def get_valid_moves(self, start):
+        left_range = range(start - 1, -1, -1)
+        right_range = range(start + 1, 11, 1)
+
+        for search_range in [left_range, right_range]:
+            for space in search_range:
+                if space in self.DOORS:
+                    continue
+
+                if self.spaces[space] is not None:
+                    break
+
+                distance = abs(start - space)
+                yield (space, distance)
+
+    def is_clear(self, start, stop):
+        if start < stop:
+            search_range = range(start + 1, stop + 1)
+        else:
+            search_range = range(stop, start)
+
+        return all(self.spaces[space] is None for space in search_range)
+
+    def update_space(self, space, amphipod):
+        return Hallway(self.spaces[:space] + (amphipod,) + self.spaces[space + 1:])
+
+
+@dataclasses.dataclass(frozen=True)
+class State:
+    energy: int
+    rooms: tuple[Room]
+    hallway: Hallway
+
+    def __hash__(self):
+        return hash((self.rooms, self.hallway))
+
+    def __eq__(self, other):
+        return isinstance(other, State) and hash(self) == hash(other)
+
+    def __lt__(self, other):
+        return self.energy < other.energy
+
+    def is_final(self):
+        return all(room.is_final() for room in self.rooms)
+
+    def update_room(self, i, new_room):
+        return self.rooms[:i] + (new_room,) + self.rooms[i + 1:]
+
+
+def get_best_path(initial_state):
+    heap = [initial_state]
+    visited = set()
+
+    while heap:
+        state = heapq.heappop(heap)
+        if state.is_final():
+            return state.energy
+        if state in visited:
+            continue
+
+        visited.add(state)
+
+        # Generate all next states where an amphipod moves into a hallway
+        for i, room in enumerate(state.rooms):
+            if room and not room.is_final():
+                amphipod, new_room = room.pop()
+                door = ROOM_DOORS[room.type]
+
+                for space, distance in state.hallway.get_valid_moves(door):
+                    new_state = State(
+                        state.energy + (room.gap() + 1 + distance) * amphipod,
+                        state.update_room(i, new_room),
+                        state.hallway.update_space(space, amphipod),
+                    )
+                    if new_state not in visited:
+                        heapq.heappush(heap, new_state)
+
+        # Generate all next states where an amphipod moves into a room
+        for space, amphipod in enumerate(state.hallway):
+            if amphipod is None:
+                continue
+
+            door = ROOM_DOORS[amphipod]
+            room_idx = ROOMS[amphipod]
+            room = state.rooms[room_idx]
+
+            if state.hallway.is_clear(space, door) and room.is_enterable():
+                new_room = room.append(amphipod)
+                distance = abs(door - space)
+
+                new_state = State(
+                    state.energy + (distance + room.gap()) * amphipod,
+                    state.update_room(room_idx, new_room),
+                    state.hallway.update_space(space, None),
+                )
+                if new_state not in visited:
+                    heapq.heappush(heap, new_state)
+
+def solve(input: typing.List[str]):
+    rooms = { 0: [], 1: [], 2: [], 3: [] }
+
+    for i in range(2, len(input) - 1):
+      for j, k in enumerate((3, 5, 7, 9)):
+        type = input[i][k]
+        match type:
+          case 'A':
+            rooms[j].append(A)
+          case 'B':
+            rooms[j].append(B)
+          case 'C':
+            rooms[j].append(C)
+          case 'D':
+            rooms[j].append(D)
+
+    return get_best_path(State(
+        0,
+        (
+            Room(A, 2, tuple(reversed(rooms[0]))),
+            Room(B, 2, tuple(reversed(rooms[1]))),
+            Room(C, 2, tuple(reversed(rooms[2]))),
+            Room(D, 2, tuple(reversed(rooms[3]))),
+        ),
+        Hallway(),
+    ))
 
 if __name__ == '__main__':
   (Puzzle('Day 23: Amphipod - part 1', CURRENT / 'input.txt')
     .add_test({ 'input_path': CURRENT / 'test.txt', 'expected_result': 12521 })
+    .add_test({ 'input_path': CURRENT / 'input.txt', 'expected_result': 11332 })
     .solve(solve))
