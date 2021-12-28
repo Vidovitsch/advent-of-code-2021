@@ -8,134 +8,106 @@ from advent_helper.puzzle import Puzzle
 CURRENT = pathlib.Path(__file__).parent
 
 class Amphipod:
-  def __init__(self, type: str, position: Tuple[int, int]) -> 'Amphipod':
+  AMPHIPODS = {
+    'A': { 'energy': 1, 'target_room': 2 },
+    'B': { 'energy': 10, 'target_room': 4 },
+    'C': { 'energy': 100, 'target_room': 6 },
+    'D': { 'energy': 1000, 'target_room': 8 }
+  }
+
+  def __init__(self, type: str, pos: Tuple[int, int]) -> 'Amphipod':
     self.type = type
-    self.position = position
-  
-  @property
-  def hallway_position(self) -> int:
-    return self.position[0]
+    self.pos = pos
+    self.energy = self.AMPHIPODS[type]['energy']
+    self.target_pos = ((self.AMPHIPODS[type]['target_room'], 1), (self.AMPHIPODS[type]['target_room'], 2))
 
-  @property
-  def side_room_position(self) -> int:
-    return self.position[1]
-
-  @property
-  def required_energy(self) -> int:
-    return {
-      'A': 1,
-      'B': 10,
-      'C': 100,
-      'D': 1000,
-    }[self.type]
-
-  @property
-  def target_hallway_position(self) -> int:
-    return {
-      'A': 3,
-      'B': 5,
-      'C': 7,
-      'D': 9,
-    }[self.type]
-
-  def is_in_a_side_room(self) -> bool:
-    return self.position[1] > 0
-
-  def is_in_position(self, related_amphipod: 'Amphipod') -> bool:
-    if self.hallway_position != self.target_hallway_position: return False
-    if self.side_room_position == 0: return False
-    if self.side_room_position == 2: return True
-
-    if self.side_room_position == 1:
-      return related_amphipod.is_in_position(self)
-
+  def __str__(self) -> str:
+    return self.type
 
 class Burrow:
-  AMPHIPODS = {
-    'A': { 'energy': 1, 'target_room': 3 },
-    'B': { 'energy': 10, 'target_room': 5 },
-    'C': { 'energy': 100, 'target_room': 7 },
-    'D': { 'energy': 1000, 'target_room': 9 }
-  }
-  TARGET_ROOMS = { value['target_room']: key for key, value in AMPHIPODS.items() }
-
   @classmethod
   def from_diagram(cls, diagram: List[str]) -> 'Burrow':
-    amphipods = []
+    amphipods = { 'A': [], 'B': [], 'C': [], 'D': [] }
+    grid = [['.'], ['.'], ['.', '.', '.'], ['.'], ['.', '.', '.'], ['.'], ['.', '.', '.'], ['.'], ['.', '.', '.'], ['.'], ['.']]
+    target_rooms = (2, 4, 6, 8)
 
-    for i in range(2, 4):
-      for side_room in [amphipod['target_room'] for amphipod in cls.AMPHIPODS.values()]:
-        amphipods.append(Amphipod(diagram[i][side_room], (side_room, i - 1)))
+    for room_pos in range(2, 4):
+      for room in target_rooms:
+        type = diagram[room_pos][room + 1]
+        amphipod = Amphipod(type, (room, room_pos - 1))
+        grid[room][room_pos - 1] = amphipod
+        amphipods[type].append(amphipod)
 
-    return cls(amphipods)
+    return cls(grid, amphipods)
 
-  def __init__(self, amphipods: List['Amphipod'], energy_spent: int=0) -> 'Burrow':
+  def __init__(self, grid: List[List[Union[str, object]]], amphipods: List['Amphipod'], energy_spent: int=0) -> 'Burrow':
+    self.grid = grid
     self.amphipods = amphipods
     self.energy_spent = energy_spent
 
+  def hallway(self) -> List[Union[str, object]]:
+    return [pos[0] for pos in self.grid]
+
+  def room(self, number: int) -> List[Union[str, object]]:
+    if number in (2, 4, 6, 8): return self.grid[number][1:]
+
   def is_organized(self) -> bool:
-    for amphipod in self.amphipods:
-      related_amphipod = [related for related in self.amphipods if related.type == amphipod.type and related != amphipod][0]
-      if not amphipod.is_in_position(related_amphipod): return False
-    
-    return True
+    return self.manhattan() == 0
 
   def move(self) -> List['Burrow']:
-    
+    return None
 
   def manhattan(self):
     total_energy = 0
 
-    tracked_amphipod_types = {}
-    for amphipod in self.amphipods:
-      related_amphipod = [related for related in self.amphipods if related.type == amphipod.type and related != amphipod][0]
-      steps = 0
-      if not amphipod.is_in_position(related_amphipod):
-        steps = abs(amphipod.hallway_position - amphipod.target_hallway_position)
-
-        if not amphipod.is_in_a_side_room():
-          steps += 1 if amphipod.type in tracked_amphipod_types or related_amphipod.is_in_position(amphipod) else 2
-        else:
-          if amphipod.hallway_position == amphipod.target_hallway_position:
-            steps += 0 if amphipod.type in tracked_amphipod_types or related_amphipod.is_in_position(amphipod) else 1
-          else:
-            steps += amphipod.side_room_position
-            steps += 1 if amphipod.type in tracked_amphipod_types or related_amphipod.is_in_position(amphipod) else 2
-        
-      tracked_amphipod_types[amphipod.type] = 1
-      total_energy += steps * amphipod.required_energy
+    for related_amphipods in self.amphipods.values():
+      for i, amphipod in enumerate(related_amphipods):
+        total_energy += self._amphipod_manhattan(amphipod) - i * amphipod.energy
 
     return total_energy
 
   def priority(self) -> int:
     return self.energy_spent + self.manhattan()
 
-  def __lt__(self, other_burrow: 'Burrow') -> bool:
-    return self.priority() < other_burrow.priority()
+  def _amphipod_in_position(self, amphipod: 'Amphipod') -> bool:
+    related_amphipod = self._related_amphipod(amphipod)
+
+    if amphipod.pos in amphipod.target_pos:
+      if amphipod.pos[1] == 2:
+        return True
+      elif related_amphipod.pos in related_amphipod.target_pos and related_amphipod.pos[1] == 2:
+        return True
+    
+    return False
+  
+  def _amphipod_manhattan(self, amphipod: 'Amphipod') -> int:
+    if amphipod.pos == amphipod.target_pos[1]: return 0
+    
+    steps = abs(amphipod.pos[0] - amphipod.target_pos[0][0]) # hallway steps
+    if amphipod.pos[1] > 0:
+      if amphipod.pos[0] == amphipod.target_pos[0][0]:
+        steps += 1 # steps to end of target room (when in target room already)
+      else:
+        steps += amphipod.pos[1] + 2 # steps out of current room + steps to end of target room
+    else:
+      steps += 2 # steps to end of target room
+
+    return steps * amphipod.energy
+
+  def _related_amphipod(self, amphipod: 'Amphipod') -> 'Amphipod':
+    return [related_amphipod for related_amphipod in self.amphipods[amphipod.type] if related_amphipod is not amphipod]
+
+
+  def __lt__(self, burrow: 'Burrow') -> bool:
+    return self.priority() < burrow.priority()
 
   def __str__(self) -> str:
-    hallway = ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.']
-    side_rooms = [['.', '.'], ['.', '.'], ['.', '.'], ['.', '.']]
-
-    for amphipod in self.amphipods:
-      if amphipod.side_room_position == 0:
-        hallway[amphipod.hallway_position] = amphipod.type
-      elif amphipod.hallway_position == 3:
-        side_rooms[0][amphipod.side_room_position - 1] = amphipod.type
-      elif amphipod.hallway_position == 5:
-        side_rooms[1][amphipod.side_room_position - 1] = amphipod.type
-      elif amphipod.hallway_position == 7:
-        side_rooms[2][amphipod.side_room_position - 1] = amphipod.type
-      elif amphipod.hallway_position == 9:
-        side_rooms[3][amphipod.side_room_position - 1] = amphipod.type
-
     string = '#############'
-    string += f"\n#{''.join(position for position in hallway)}#"
-    string += f'\n###{side_rooms[0][0]}#{side_rooms[1][0]}#{side_rooms[2][0]}#{side_rooms[3][0]}###'
-    string += f'\n###{side_rooms[0][1]}#{side_rooms[1][1]}#{side_rooms[2][1]}#{side_rooms[3][1]}###'
-    string += '\n   #######   '
+    string += f"\n#{''.join(self.hallway())}#"
+    string += f'\n###{self.room(2)[0]}#{self.room(4)[0]}#{self.room(6)[0]}#{self.room(8)[0]}###'
+    string += f'\n###{self.room(2)[1]}#{self.room(4)[1]}#{self.room(6)[1]}#{self.room(8)[1]}###'
 
-    return string
+    return string + '\n   #######   '
 
 def process_input(input: List[str]) -> 'Burrow':
   return Burrow.from_diagram(input)
@@ -143,16 +115,18 @@ def process_input(input: List[str]) -> 'Burrow':
 @process_puzzle_input(process_input)
 def solve(burrow: 'Burrow') -> int:
   priority_queue = [burrow]
+  print()
   print(burrow)
+  print(burrow.manhattan())
   
-  heapq.heappush(priority_queue, Burrow(burrow.amphipods, 11))
-  heapq.heappush(priority_queue, Burrow(burrow.amphipods, 222))
-  heapq.heappush(priority_queue, Burrow(burrow.amphipods, 3))
-  heapq.heappush(priority_queue, Burrow(burrow.amphipods, 1))
+  heapq.heappush(priority_queue, Burrow(burrow.grid, burrow.amphipods))
+  heapq.heappush(priority_queue, Burrow(burrow.grid, burrow.amphipods))
+  heapq.heappush(priority_queue, Burrow(burrow.grid, burrow.amphipods, 222))
+  heapq.heappush(priority_queue, Burrow(burrow.grid, burrow.amphipods, 22))
 
   while len(priority_queue) > 0:
     a = heapq.heappop(priority_queue)
-    print(a.manhattan())
+    print(a.priority())
 
   return 0
 
